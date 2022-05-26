@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef } from 'react';
 
 function App() {
+  const filesElement = useRef(null);
+
+  const sendFile = async () => {
+    const dataForm = new FormData();
+    for (const file of filesElement.current.files) {
+      dataForm.append('file', file);
+    }
+    const res = await fetch(`http://localhost:5000/upload`, {
+      method: 'POST',
+      body: dataForm,
+    });
+    console.log(res)
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input type="file" multiple ref={filesElement} />
+      <button onClick={sendFile}>Send file</button>
     </div>
   );
 }
